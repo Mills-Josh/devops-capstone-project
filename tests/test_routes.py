@@ -146,3 +146,14 @@ class TestAccountService(TestCase):
         """It should get a 404 when no account exists"""
         response = self.client.get(f"{BASE_URL}/0")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_list_accounts(self):
+        """It should get all accounts created"""
+        accounts = self._create_accounts(5)
+
+        response = self.client.get(BASE_URL, content_type="application/json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        new_accounts = response.get_json()
+        self.assertEqual(len(accounts), len(new_accounts))
+    
