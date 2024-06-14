@@ -130,7 +130,7 @@ class TestAccountService(TestCase):
         account = self._create_accounts(1)[0]
 
         # get it separately
-        response = self.client.get(f"${BASE_URL}/${account.id}", 
+        response = self.client.get(f"{BASE_URL}/{account.id}", 
                                     content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -141,3 +141,8 @@ class TestAccountService(TestCase):
         self.assertEqual(new_account["address"], account.address)
         self.assertEqual(new_account["phone_number"], account.phone_number)
         self.assertEqual(new_account["date_joined"], str(account.date_joined))
+    
+    def test_account_not_found(self):
+        """It should get a 404 when no account exists"""
+        response = self.client.get(f"{BASE_URL}/0")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
