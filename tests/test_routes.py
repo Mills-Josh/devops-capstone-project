@@ -166,7 +166,7 @@ class TestAccountService(TestCase):
                                     json=account.serialize())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        newAccount = response.get_json()
+        new_account = response.get_json()
         self.assertEqual(new_account["name"], account.name)
         
     def test_update_invalid(self):
