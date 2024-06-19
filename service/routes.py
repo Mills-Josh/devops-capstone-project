@@ -57,6 +57,7 @@ def create_accounts():
         jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
     )
 
+
 ######################################################################
 # LIST ALL ACCOUNTS
 ######################################################################
@@ -69,9 +70,8 @@ def get_account_list():
 
     accounts = Account.all()
     json = [account.serialize() for account in accounts]
-    
-    return jsonify(json), status.HTTP_200_OK
 
+    return jsonify(json), status.HTTP_200_OK
 
 
 ######################################################################
@@ -89,6 +89,7 @@ def get_account(account_id):
         abort(status.HTTP_404_NOT_FOUND, f"Account with id [{account_id}] not found")
 
     return account.serialize(), status.HTTP_200_OK
+
 
 ######################################################################
 # UPDATE AN EXISTING ACCOUNT
@@ -109,7 +110,7 @@ def update_account(account_id):
     account.update()
 
     return account.serialize(), status.HTTP_200_OK
-    
+
 
 ######################################################################
 # DELETE AN ACCOUNT
@@ -124,7 +125,7 @@ def delete_account(account_id):
     account = Account.find(account_id)
     if account:
         account.delete()
-        
+
     return "", status.HTTP_204_NO_CONTENT
 
 
