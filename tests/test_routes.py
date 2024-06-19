@@ -21,6 +21,7 @@ DATABASE_URI = os.getenv(
 BASE_URL = "/accounts"
 HTTPS_ENVIRON = {'wsgi.url_scheme': 'https'}
 
+
 ######################################################################
 #  T E S T   C A S E S
 ######################################################################
@@ -132,8 +133,7 @@ class TestAccountService(TestCase):
         account = self._create_accounts(1)[0]
 
         # get it separately
-        response = self.client.get(f"{BASE_URL}/{account.id}", 
-                                    content_type="application/json")
+        response = self.client.get(f"{BASE_URL}/{account.id}", content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Check the data still matches
@@ -143,7 +143,7 @@ class TestAccountService(TestCase):
         self.assertEqual(new_account["address"], account.address)
         self.assertEqual(new_account["phone_number"], account.phone_number)
         self.assertEqual(new_account["date_joined"], str(account.date_joined))
-    
+
     def test_account_not_found(self):
         """It should get a 404 when no account exists"""
         response = self.client.get(f"{BASE_URL}/0")
@@ -158,19 +158,18 @@ class TestAccountService(TestCase):
 
         new_accounts = response.get_json()
         self.assertEqual(len(accounts), len(new_accounts))
-    
+
     def test_update_account(self):
         """It should update an account"""
         account = self._create_accounts(1)[0]
 
         account.name = "Updated Account"
-        response = self.client.put(f"{BASE_URL}/{account.id}",
-                                    json=account.serialize())
+        response = self.client.put(f"{BASE_URL}/{account.id}", json=account.serialize())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         new_account = response.get_json()
         self.assertEqual(new_account["name"], account.name)
-        
+
     def test_update_invalid(self):
         """It should return 404 when updating invalid id"""
         response = self.client.put(f"{BASE_URL}/0")
@@ -184,14 +183,13 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
         # Confirm the account is deleted
-        response = self.client.get(f"{BASE_URL}/{account.id}", 
-                                    content_type="application/json")
+        response = self.client.get(f"{BASE_URL}/{account.id}", content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
         # Calls on invalid ids return 204 still
         response = self.client.delete(f"{BASE_URL}/{account.id}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-    
+
     def test_security_headers(self):
         """It should return security headers"""
         response = self.client.get('/', environ_overrides=HTTPS_ENVIRON)
