@@ -181,5 +181,11 @@ class TestAccountService(TestCase):
         response = self.client.delete(f"{BASE_URL}/{account.id}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-        response = self.client.delete(f"{BASE_URL}/{account.id}")
+        # Confirm the account is deleted
+        response = self.client.get(f"{BASE_URL}/{account.id}", 
+                                    content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # Calls on invalid ids return 204 still
+        response = self.client.delete(f"{BASE_URL}/{account.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
